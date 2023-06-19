@@ -50,7 +50,7 @@ const DiaryEditor = ({onCreate}) => {
                         ...state,
                         content: e.target.value
                     })
-                    console.log(e.target.value)
+                    // console.log(e.target.value)
 
                 }}/>
             </div>

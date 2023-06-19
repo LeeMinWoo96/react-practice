@@ -2,7 +2,6 @@ import DiaryItem from "./DiaryItem";
 
 // diarylist 를 왜 두번 ?
 const DiaryList = ( {onEdit, onRemove, diaryList} ) =>{
-    console.log(diaryList)
     return (
         <div></div>,
         <div className="DiaryList">

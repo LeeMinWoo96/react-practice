@@ -5,7 +5,6 @@ import React,{useEffect, useState} from "react";
 // 왜 마운트할때 마운트,언마운트,마운트 이렇게 반복하지
 const UnMountTest = () =>{
     useEffect(() =>{
-        console.log("Mount");
         // return () => {
         //     console.log("unmount");
         // };

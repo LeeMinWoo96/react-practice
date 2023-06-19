@@ -1,8 +1,9 @@
 import './App.css';
 import DiaryEditor from "./DiaryEditor";
 import DiaryList from "./DiaryList";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import Lifecycle from "./Lifecycle";
+import OptimizeTest from "./OptimizeTest";
 
 
 // https://jsonplaceholder.typicode.com/comments
@@ -14,7 +15,6 @@ function App() {
 
     const getData = async () =>{ // ㅂㅣ동기
             const res = await fetch("https://jsonplaceholder.typicode.com/comments").then((res) => res.json());
-            console.log(res);
 
             const initData = res.slice(0,20).map((it => {
                 return {
@@ -24,7 +24,8 @@ function App() {
                     created_date: new Date().getTime(),
                     id : dataId.current++
                 }
-            }))
+            }));
+            setData(initData);
     }
 
     useEffect(() => {
@@ -47,7 +48,6 @@ function App() {
     }
 
     const onRemove = (targetId) => {
-        console.log(`${targetId} 가 삭제되었습니다.`);
         const newDiaryList = data.filter((it) => it.id !== targetId);
         setData(newDiaryList);
     }
@@ -59,10 +59,24 @@ function App() {
             )
         )
     }
+
+    const getDiaryAnalysis = useMemo(() => {
+        const goodCount = data.filter((it) => it.emotion >= 3).length;
+        const badCount = data.length - goodCount;
+        const goodRatio = (goodCount/data.length) * 100;
+        return [goodCount, badCount, goodRatio];
+    }, [data.length]) // data.length 가 변화하지 않으면 이 함수는 따로 호출않고 결과를 바로 반환한다.
+
+    const [goodCount, badCount, goodRatio] = getDiaryAnalysis;
   return (
     <div className="App">
+        <OptimizeTest></OptimizeTest>
         <Lifecycle></Lifecycle>
         <DiaryEditor onCreate = {onCreate}/>
+        <div>전체 일기 : {data.length}</div>
+        <div>기분 좋은 일기 갯수 : {goodCount}</div>
+        <div>기분 나쁜 일기 갯수 : {badCount}</div>
+        <div>기좋 일기 비율 : {goodRatio}</div>
         <DiaryList onEdit = {onEdit} onRemove = {onRemove} diaryList = {data}/>
     </div>
   );
